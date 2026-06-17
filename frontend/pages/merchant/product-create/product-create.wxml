@@ -1,0 +1,64 @@
+<navigation-bar title="{{pageTitle}}" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <form bindsubmit="submit">
+    <view class="field">
+      <text class="label">产品名称</text>
+      <input class="input" name="name" value="{{form.name}}" placeholder="例如 修护面膜推广" />
+    </view>
+    <view class="field">
+      <text class="label">行业类型</text>
+      <input class="input" name="type" value="{{form.type}}" placeholder="美妆/数码/本地生活" />
+    </view>
+    <view class="field">
+      <text class="label">适合达人领域</text>
+      <input class="input" name="targetCategories" value="{{form.targetCategories}}" placeholder="美妆,母婴,本地生活" />
+    </view>
+    <view class="field">
+      <text class="label">推广目标</text>
+      <input class="input" name="goal" value="{{form.goal}}" placeholder="曝光/转化/引流" />
+    </view>
+    <view class="field">
+      <text class="label">投放平台</text>
+      <input class="input" name="platform" value="{{form.platform}}" placeholder="小红书/抖音/B站" />
+    </view>
+    <view class="field">
+      <text class="label">合作形式</text>
+      <input class="input" name="cooperationType" value="{{form.cooperationType}}" placeholder="种草/探店/带货" />
+    </view>
+    <view class="field">
+      <text class="label">内容形式要求</text>
+      <input class="input" name="contentForms" value="{{form.contentForms}}" placeholder="图文,短视频,直播" />
+    </view>
+    <view class="grid">
+      <view class="field">
+        <text class="label">最低预算</text>
+        <input class="input" type="number" name="budgetMin" value="{{form.budgetMin}}" />
+      </view>
+      <view class="field">
+        <text class="label">最高预算</text>
+        <input class="input" type="number" name="budgetMax" value="{{form.budgetMax}}" />
+      </view>
+    </view>
+    <view class="field">
+      <text class="label">单达人报价上限</text>
+      <input class="input" type="number" name="maxQuotePerInfluencer" value="{{form.maxQuotePerInfluencer}}" />
+    </view>
+    <view class="grid">
+      <view class="field">
+        <text class="label">最低粉丝</text>
+        <input class="input" type="number" name="fansMin" value="{{form.fansMin}}" />
+      </view>
+      <view class="field">
+        <text class="label">最高粉丝</text>
+        <input class="input" type="number" name="fansMax" value="{{form.fansMax}}" />
+      </view>
+    </view>
+    <view class="field">
+      <text class="label">产品介绍</text>
+      <textarea class="textarea" name="description" value="{{form.description}}" placeholder="说明合作内容、达人要求和交付形式" />
+    </view>
+    <button class="primary-btn" form-type="submit" loading="{{submitting}}" disabled="{{submitting}}">
+      {{submitting ? '保存中' : (productId ? '保存修改' : '保存发布')}}
+    </button>
+  </form>
+</view>

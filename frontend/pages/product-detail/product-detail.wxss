@@ -1,0 +1,28 @@
+.line {
+  min-height: 66rpx;
+  border-bottom: 1rpx solid #eef0f4;
+  padding: 14rpx 0;
+  box-sizing: border-box;
+  align-items: flex-start;
+}
+
+.line:last-child {
+  border-bottom: 0;
+}
+
+.section-title,
+.card-title {
+  color: #111827;
+}
+
+.section-title {
+  margin-bottom: 18rpx;
+}
+
+.line text:last-child {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  line-height: 1.55;
+  word-break: break-word;
+}

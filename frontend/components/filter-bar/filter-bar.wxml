@@ -1,0 +1,35 @@
+<view class="filter-bar">
+  <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="filter-track">
+      <view wx:if="{{mode === 'influencer'}}" class="filter-chip">
+        <text class="chip-label">领域</text>
+        <input class="chip-input" value="{{category}}" data-key="category" bindinput="onInput" placeholder="美妆/数码" />
+      </view>
+      <view wx:if="{{mode === 'product'}}" class="filter-chip">
+        <text class="chip-label">行业</text>
+        <input class="chip-input" value="{{type}}" data-key="type" bindinput="onInput" placeholder="美妆/数码" />
+      </view>
+      <view class="filter-chip">
+        <text class="chip-label">平台</text>
+        <input class="chip-input" value="{{platform}}" data-key="platform" bindinput="onInput" placeholder="小红书/抖音" />
+      </view>
+      <view wx:if="{{mode === 'product'}}" class="filter-chip">
+        <text class="chip-label">预算</text>
+        <input class="chip-input" type="number" value="{{budgetMin}}" data-key="budgetMin" bindinput="onInput" placeholder="800+" />
+      </view>
+      <view class="filter-chip">
+        <text class="chip-label">{{mode === 'influencer' ? '粉丝' : '粉丝'}}</text>
+        <input class="chip-input" type="number" value="{{fansMin}}" data-key="fansMin" bindinput="onInput" placeholder="1w+" />
+      </view>
+      <view wx:if="{{mode === 'influencer'}}" class="filter-chip">
+        <text class="chip-label">报价</text>
+        <input class="chip-input" value="{{priceRange}}" data-key="priceRange" bindinput="onInput" placeholder="800" />
+      </view>
+      <view wx:if="{{mode === 'product'}}" class="filter-chip filter-chip-wide">
+        <text class="chip-label">合作</text>
+        <input class="chip-input" value="{{cooperationType}}" data-key="cooperationType" bindinput="onInput" placeholder="种草/探店" />
+      </view>
+    </view>
+  </scroll-view>
+  <button class="filter-action" hover-class="filter-action-pressed" bindtap="onSubmit">{{actionText}}</button>
+</view>

@@ -1,0 +1,46 @@
+<navigation-bar title="产品详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page" wx:if="{{product}}">
+  <view class="section">
+    <view class="title">{{product.name}}</view>
+    <view class="subtitle">{{product.description}}</view>
+  </view>
+
+  <view class="card">
+    <view class="row line">
+      <text class="muted">行业类型</text>
+      <text>{{product.type}}</text>
+    </view>
+    <view class="row line">
+      <text class="muted">推广目标</text>
+      <text>{{product.goal}}</text>
+    </view>
+    <view class="row line">
+      <text class="muted">预算范围</text>
+      <text>{{product.budgetMin}}-{{product.budgetMax}} 元</text>
+    </view>
+    <view class="row line">
+      <text class="muted">投放平台</text>
+      <text>{{product.platform}}</text>
+    </view>
+    <view class="row line">
+      <text class="muted">粉丝要求</text>
+      <text>{{product.fansMin}}-{{product.fansMax}}</text>
+    </view>
+    <view class="row line">
+      <text class="muted">合作类型</text>
+      <text>{{product.cooperationType}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{mode === 'merchant'}}" class="section">
+    <view class="section-title">匹配达人</view>
+    <view class="card" wx:for="{{matches}}" wx:key="influencer.id">
+      <view class="row">
+        <view class="card-title">{{item.influencer.nickname}}</view>
+        <text class="tag">匹配 {{item.score}}</text>
+      </view>
+      <view class="muted">{{item.influencer.platform}} · {{item.influencer.fansRange}} · {{item.influencer.category}}</view>
+    </view>
+  </view>
+</view>
+<view wx:else class="page empty">加载中</view>

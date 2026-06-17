@@ -1,0 +1,176 @@
+.login-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #fff8ec 0%, #fffdf8 42%, #ffffff 100%);
+  color: #171717;
+}
+
+.login-shell,
+.bind-shell {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 128rpx 48rpx calc(56rpx + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-ad {
+  min-height: 168rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 16rpx;
+}
+
+.ad-line {
+  display: block;
+  color: rgba(84, 79, 72, 0.58);
+  font-size: 28rpx;
+  line-height: 1.7;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.brand-core {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 72rpx;
+}
+
+.brand-mark {
+  color: #15120d;
+  font-size: 88rpx;
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.brand-slogan {
+  margin-top: 22rpx;
+  color: rgba(42, 38, 32, 0.42);
+  font-size: 24rpx;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.login-action {
+  width: 100%;
+}
+
+.wechat-login-btn {
+  width: 100%;
+  min-height: 104rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999rpx;
+  background: #07c160;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1.35;
+  box-shadow: 0 20rpx 42rpx rgba(7, 193, 96, 0.26);
+}
+
+.wechat-login-btn::after,
+.role-card::after {
+  border: 0;
+}
+
+.wechat-login-btn[disabled] {
+  background: rgba(7, 193, 96, 0.62);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.bind-shell {
+  align-items: center;
+  justify-content: center;
+  gap: 48rpx;
+}
+
+.bind-copy {
+  text-align: center;
+}
+
+.bind-title {
+  color: #15120d;
+  font-size: 52rpx;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.bind-subtitle {
+  margin-top: 18rpx;
+  color: rgba(84, 79, 72, 0.62);
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.role-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40rpx;
+}
+
+.role-card {
+  width: 100%;
+  max-width: 560rpx;
+  min-height: 176rpx;
+  padding: 28rpx 18rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.82);
+  border: 2rpx solid rgba(30, 24, 16, 0.08);
+  box-shadow: 0 16rpx 42rpx rgba(40, 35, 28, 0.07);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12rpx;
+  box-sizing: border-box;
+}
+
+.role-card-active {
+  border-color: rgba(7, 193, 96, 0.8);
+  background: rgba(240, 255, 247, 0.92);
+}
+
+.role-title {
+  color: #15120d;
+  font-size: 30rpx;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+.role-desc {
+  color: rgba(84, 79, 72, 0.56);
+  font-size: 23rpx;
+  line-height: 1.4;
+}
+
+@media screen and (max-width: 360px) {
+  .login-shell,
+  .bind-shell {
+    padding-left: 36rpx;
+    padding-right: 36rpx;
+  }
+
+  .brand-mark {
+    font-size: 76rpx;
+  }
+
+  .ad-line {
+    font-size: 26rpx;
+  }
+
+  .role-card {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,76 @@
+.influencer-card {
+  margin-bottom: 22rpx;
+  padding: 28rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  box-shadow: 0 16rpx 38rpx rgba(35, 48, 88, 0.09);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  min-width: 0;
+}
+
+.talent-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #20b6d2, #5b6ff5);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 900;
+  box-shadow: 0 12rpx 26rpx rgba(32, 182, 210, 0.2);
+}
+
+.image-avatar {
+  display: block;
+}
+
+.head-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  color: #111827;
+  font-size: 31rpx;
+  font-weight: 850;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.meta,
+.contact-line {
+  margin-top: 10rpx;
+  color: #667085;
+  font-size: 24rpx;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.info-pill {
+  padding: 10rpx 16rpx;
+  border-radius: 999rpx;
+  background: #f2f5ff;
+  color: #5062df;
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.unlock {
+  margin-top: 22rpx;
+}

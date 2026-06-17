@@ -1,0 +1,31 @@
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.portfolio-card {
+  margin: 24rpx 0;
+  padding: 28rpx;
+  border-radius: 20rpx;
+  background: #ffffff;
+  box-shadow: 0 12rpx 36rpx rgba(29, 41, 57, 0.08);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.section-hint {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #8a94a6;
+}
+
+.portfolio-item {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  margin-top: 20rpx;
+}

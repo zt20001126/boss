@@ -1,0 +1,9 @@
+.page {
+  padding-bottom: 48rpx;
+}
+
+.filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}

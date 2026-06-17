@@ -1,0 +1,40 @@
+<navigation-bar title="" back="{{false}}" color="black" background="transparent"></navigation-bar>
+<view class="login-page">
+  <view wx:if="{{!needBindRole}}" class="login-shell">
+    <view class="brand-ad">
+      <text class="ad-line">让优质品牌与合适达人自然相遇</text>
+      <text class="ad-line">从合作发现到信任连接，达人桥为每一次内容合作铺好第一步。</text>
+    </view>
+
+    <view class="brand-core">
+      <view class="brand-mark">达人桥</view>
+      <view class="brand-slogan">Connect the Dots</view>
+    </view>
+
+    <view class="login-action">
+      <button class="wechat-login-btn" loading="{{wxLoading}}" disabled="{{wxLoading || loading}}" bindtap="wxLogin">微信一键登录</button>
+    </view>
+  </view>
+
+  <view wx:else class="bind-shell">
+    <view class="bind-copy">
+      <view class="bind-title">选择身份</view>
+      <view class="bind-subtitle">完成首次绑定后，我们会为你准备对应的工作台。</view>
+    </view>
+
+    <view class="role-grid">
+      <button class="{{role === 'MERCHANT' ? 'role-card role-card-active' : 'role-card'}}" data-role="MERCHANT" bindtap="selectRole">
+        <text class="role-title">商家端</text>
+        <text class="role-desc">发布合作需求</text>
+      </button>
+      <button class="{{role === 'INFLUENCER' ? 'role-card role-card-active' : 'role-card'}}" data-role="INFLUENCER" bindtap="selectRole">
+        <text class="role-title">达人端</text>
+        <text class="role-desc">发现优质合作</text>
+      </button>
+    </view>
+
+    <view class="login-action">
+      <button class="wechat-login-btn" loading="{{loading}}" disabled="{{loading}}" bindtap="bindRole">绑定身份</button>
+    </view>
+  </view>
+</view>

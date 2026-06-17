@@ -1,0 +1,55 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE local files
+.idea/
+*.iml
+.vscode/
+
+# Java / Maven build output
+target/
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+application-local.yml
+application-*.local.yml
+
+# Runtime data generated locally
+data/
+backend/data/
+uploads/
+backend/uploads/
+
+# Node / frontend dependencies and build artifacts
+node_modules/
+dist/
+build/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# WeChat Mini Program local/private files
+project.private.config.json
+**/project.private.config.json
+miniprogram_npm/
+**/miniprogram_npm/
+**/.miniprogram/

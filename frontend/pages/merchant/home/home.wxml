@@ -1,0 +1,100 @@
+<navigation-bar title="商家工作台" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="workspace-page">
+  <scroll-view class="workspace-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <view wx:if="{{activeTab === 'library'}}" class="tab-panel">
+      <view class="filter-bar-sticky">
+        <view class="filter-row">
+          <view class="filter-control">
+            <text class="filter-label">领域</text>
+            <input class="filter-input" value="{{category}}" data-key="category" bindinput="onFilterInput" placeholder="美妆/数码" />
+          </view>
+          <view class="filter-control">
+            <text class="filter-label">报价</text>
+            <input class="filter-input" value="{{priceRange}}" data-key="priceRange" bindinput="onFilterInput" placeholder="800-1500" />
+          </view>
+          <view class="filter-control">
+            <text class="filter-label">粉丝量</text>
+            <input class="filter-input" type="number" value="{{fansMin}}" data-key="fansMin" bindinput="onFilterInput" placeholder="10000" />
+          </view>
+        </view>
+      </view>
+
+      <block wx:if="{{influencers.length}}">
+        <view class="talent-card" wx:for="{{influencers}}" wx:key="id" data-id="{{item.id}}" hover-class="card-pressed" bindtap="showPayPrompt">
+          <view class="talent-top">
+            <image wx:if="{{item.avatarUrl}}" class="talent-avatar image-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+            <view wx:else class="talent-avatar">达</view>
+            <view class="talent-main">
+              <view class="talent-name">{{item.nickname}}</view>
+              <view class="talent-meta">{{item.city ? item.city + ' · ' : ''}}{{item.platform}} · {{item.fansRange}}</view>
+            </view>
+            <text class="tag">{{item.categories || item.category}}</text>
+          </view>
+          <view class="info-grid">
+            <view class="info-pill">图文 {{item.priceImageText || item.priceRange}}</view>
+            <view class="info-pill">视频 {{item.priceVideo || item.priceRange}}</view>
+            <view class="info-pill" wx:if="{{item.contentForms}}">{{item.contentForms}}</view>
+            <view class="info-pill">{{item.unlocked ? '已解锁' : '待解锁'}}</view>
+          </view>
+          <view class="talent-foot">
+            <text>{{item.unlocked ? '已解锁联系方式' : '联系方式付费后可见'}}</text>
+          </view>
+        </view>
+      </block>
+      <empty-state wx:else text="暂无公开达人" />
+    </view>
+
+    <view wx:else class="tab-panel mine-panel">
+      <view wx:if="{{!profileComplete}}" class="card profile-alert">
+        <view class="card-title">资料待完善</view>
+        <view class="muted">补全商家资料后再发布推广需求。</view>
+      </view>
+
+      <view class="mine-card" hover-class="card-pressed" bindtap="goProfile">
+        <view>
+          <view class="mine-title">商家资料编辑</view>
+          <view class="mine-desc">维护品牌、行业、简介与联系方式</view>
+        </view>
+        <text class="mine-arrow">›</text>
+      </view>
+      <view class="mine-card" hover-class="card-pressed" bindtap="goCreate">
+        <view>
+          <view class="mine-title">发布商品</view>
+          <view class="mine-desc">新增推广商品与合作需求</view>
+        </view>
+        <text class="mine-arrow">›</text>
+      </view>
+      <view class="mine-card" hover-class="card-pressed" bindtap="goProducts">
+        <view>
+          <view class="mine-title">商品管理</view>
+          <view class="mine-desc">查看和维护已上架商品</view>
+        </view>
+        <text class="mine-arrow">›</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="bottom-tabbar">
+    <button class="{{activeTab === 'library' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="library" bindtap="switchTab">
+      <text class="tab-icon">◉</text>
+      <text>达人库</text>
+    </button>
+    <button class="{{activeTab === 'mine' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="mine" bindtap="switchTab">
+      <text class="tab-icon">●</text>
+      <text>我的</text>
+    </button>
+  </view>
+
+  <view wx:if="{{showUnlockPrompt}}" class="unlock-mask" catchtap="hidePayPrompt">
+    <view class="unlock-modal" catchtap="noop">
+      <view class="unlock-icon">¥</view>
+      <view class="unlock-title">解锁达人联系方式</view>
+      <view class="unlock-desc">该达人信息需付费后查看完整联系方式</view>
+      <view wx:if="{{selectedInfluencer}}" class="unlock-target">{{selectedInfluencer.nickname}} · {{selectedInfluencer.category}}</view>
+      <view class="unlock-actions">
+        <button class="unlock-cancel" bindtap="hidePayPrompt">取消</button>
+        <button class="unlock-confirm" bindtap="goUnlockPlaceholder">去解锁</button>
+      </view>
+    </view>
+  </view>
+</view>

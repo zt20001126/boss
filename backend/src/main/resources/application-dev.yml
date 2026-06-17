@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/boss_matching?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:123456}
+    driver-class-name: ${MYSQL_DRIVER:com.mysql.cj.jdbc.Driver}
+  sql:
+    init:
+      mode: ${SQL_INIT_MODE:always}
+
+app:
+  mock-enabled: ${APP_MOCK_ENABLED:true}
+  data:
+    provider: ${DATA_PROVIDER:mysql}
+  auth:
+    jwt-secret: ${JWT_SECRET:dev-secret-change-me}
+    token-ttl-seconds: ${JWT_TOKEN_TTL_SECONDS:86400}

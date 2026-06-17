@@ -1,0 +1,8 @@
+<navigation-bar title="产品管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <button class="primary-btn section" bindtap="goCreate">发布产品</button>
+  <block wx:if="{{products.length}}">
+    <product-card wx:for="{{products}}" wx:key="id" item="{{item}}" mode="manage" bind:detail="goDetail" bind:edit="goEdit" bind:offline="offline" />
+  </block>
+  <empty-state wx:else text="暂无产品" />
+</view>

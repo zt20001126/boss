@@ -1,0 +1,7 @@
+.page {
+  padding-bottom: 48rpx;
+}
+
+.primary-btn {
+  margin-bottom: 24rpx;
+}

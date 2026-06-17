@@ -1,0 +1,53 @@
+<navigation-bar title="达人工作台" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="workspace-page">
+  <scroll-view class="workspace-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <view wx:if="{{activeTab === 'library'}}" class="tab-panel">
+      <view class="filter-bar-sticky">
+        <filter-bar
+          mode="product"
+          action-text="筛选"
+          type="{{type}}"
+          platform="{{platform}}"
+          budget-min="{{budgetMin}}"
+          fans-min="{{fansMin}}"
+          cooperation-type="{{cooperationType}}"
+          bind:change="onFilterChange"
+          bind:submit="loadProducts"
+        />
+      </view>
+
+      <block wx:if="{{products.length}}">
+        <product-card wx:for="{{products}}" wx:key="id" item="{{item}}" bind:detail="goDetail" />
+      </block>
+      <empty-state wx:else text="暂无商家合作" />
+    </view>
+
+    <view wx:else class="tab-panel mine-panel">
+      <view class="mine-card" hover-class="card-pressed" bindtap="goProfile">
+        <view>
+          <view class="mine-title">达人资料</view>
+          <view class="mine-desc">维护平台、领域、报价与联系方式</view>
+        </view>
+        <text class="mine-arrow">›</text>
+      </view>
+      <view class="mine-card" hover-class="card-pressed">
+        <view>
+          <view class="mine-title">可申请合作记录</view>
+          <view class="mine-desc">查看已浏览和后续可跟进的商家合作</view>
+        </view>
+        <text class="mine-arrow">›</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="bottom-tabbar">
+    <button class="{{activeTab === 'library' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="library" bindtap="switchTab">
+      <text class="tab-icon">◉</text>
+      <text>商家列表</text>
+    </button>
+    <button class="{{activeTab === 'mine' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="mine" bindtap="switchTab">
+      <text class="tab-icon">●</text>
+      <text>我的</text>
+    </button>
+  </view>
+</view>

@@ -1,0 +1,18 @@
+<navigation-bar title="筛选达人" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <filter-bar
+    mode="influencer"
+    action-text="筛选公开达人"
+    category="{{category}}"
+    platform="{{platform}}"
+    fans-min="{{fansMin}}"
+    price-range="{{priceRange}}"
+    bind:change="onFilterChange"
+    bind:submit="loadInfluencers"
+  />
+
+  <block wx:if="{{influencers.length}}">
+    <influencer-card wx:for="{{influencers}}" wx:key="id" item="{{item}}" bind:unlock="unlock" />
+  </block>
+  <empty-state wx:else text="暂无公开达人" />
+</view>

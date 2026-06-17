@@ -1,0 +1,21 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/merchant/home/home",
+    "pages/merchant/profile/profile",
+    "pages/merchant/product-list/product-list",
+    "pages/merchant/product-create/product-create",
+    "pages/merchant/influencer-list/influencer-list",
+    "pages/influencer/home/home",
+    "pages/influencer/profile/profile",
+    "pages/product-detail/product-detail"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

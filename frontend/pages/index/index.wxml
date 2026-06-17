@@ -1,0 +1,7 @@
+<navigation-bar title="达人桥" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="page index-page">
+  <view class="section">
+    <view class="title">达人桥</view>
+    <view class="subtitle">让优质品牌与合适达人自然相遇。</view>
+  </view>
+</view>

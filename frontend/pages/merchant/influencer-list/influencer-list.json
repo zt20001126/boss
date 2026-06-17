@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "navigation-bar": "/components/navigation-bar/navigation-bar",
+    "filter-bar": "/components/filter-bar/filter-bar",
+    "influencer-card": "/components/influencer-card/influencer-card",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

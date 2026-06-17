@@ -1,0 +1,29 @@
+<navigation-bar title="商家资料" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="section">
+    <view class="title">商家资料</view>
+    <view class="subtitle">用于达人了解品牌背景，也会影响后续撮合沟通。</view>
+  </view>
+
+  <form bindsubmit="submit">
+    <view class="field">
+      <text class="label">商家名称</text>
+      <input class="input" name="name" value="{{form.name}}" placeholder="例如 星芒美妆" />
+    </view>
+    <view class="field">
+      <text class="label">行业领域</text>
+      <input class="input" name="industry" value="{{form.industry}}" placeholder="美妆/食品/数码/本地生活" />
+    </view>
+    <view class="field">
+      <text class="label">品牌简介</text>
+      <textarea class="textarea" name="description" value="{{form.description}}" placeholder="简要说明品牌、产品和合作方向" />
+    </view>
+    <view class="field">
+      <text class="label">联系方式</text>
+      <input class="input" name="contact" value="{{form.contact}}" placeholder="手机号/微信/邮箱" />
+    </view>
+    <button class="primary-btn" form-type="submit" loading="{{saving}}" disabled="{{saving}}">
+      {{saving ? '保存中' : '保存资料'}}
+    </button>
+  </form>
+</view>

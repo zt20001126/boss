@@ -1,0 +1,24 @@
+<view class="card product-card" hover-class="card-pressed" bindtap="onDetail">
+  <view class="card-head">
+    <view class="brand-avatar">商</view>
+    <view class="head-main">
+      <view class="card-title">{{item.name}}</view>
+      <view class="meta">{{item.platform}} · {{item.cooperationType}}</view>
+    </view>
+    <text class="tag">{{item.targetCategories || item.type}}</text>
+  </view>
+  <view class="subtitle">{{item.description}}</view>
+  <view class="info-grid">
+    <view class="info-pill">预算 {{item.budgetMin}}-{{item.budgetMax}} 元</view>
+    <view class="info-pill" wx:if="{{item.maxQuotePerInfluencer}}">单人上限 {{item.maxQuotePerInfluencer}}</view>
+    <view class="info-pill" wx:if="{{item.goal}}">{{item.goal}}</view>
+    <view class="info-pill" wx:if="{{item.contentForms}}">{{item.contentForms}}</view>
+    <view class="info-pill">粉丝 {{item.fansMin}}-{{item.fansMax}}</view>
+  </view>
+
+  <view wx:if="{{mode === 'manage'}}" class="actions">
+    <button class="ghost-btn action-btn" hover-class="card-pressed" catchtap="onDetail">匹配达人</button>
+    <button class="ghost-btn action-btn" hover-class="card-pressed" catchtap="onEdit">编辑</button>
+    <button class="danger-btn action-btn" hover-class="card-pressed" catchtap="onOffline">下架</button>
+  </view>
+</view>
