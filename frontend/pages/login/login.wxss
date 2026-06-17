@@ -1,5 +1,5 @@
 .login-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 48px - env(safe-area-inset-top));
   box-sizing: border-box;
   background: linear-gradient(180deg, #fff8ec 0%, #fffdf8 42%, #ffffff 100%);
   color: #171717;
@@ -7,42 +7,42 @@
 
 .login-shell,
 .bind-shell {
-  min-height: 100vh;
+  min-height: calc(100vh - 48px - env(safe-area-inset-top));
   box-sizing: border-box;
-  padding: 128rpx 48rpx calc(56rpx + env(safe-area-inset-bottom));
+  padding: 56rpx 48rpx calc(36rpx + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
 }
 
 .brand-ad {
-  min-height: 168rpx;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 16rpx;
+  gap: 12rpx;
+  flex: none;
 }
 
 .ad-line {
   display: block;
-  color: rgba(84, 79, 72, 0.58);
-  font-size: 28rpx;
-  line-height: 1.7;
+  color: rgba(84, 79, 72, 0.62);
+  font-size: 26rpx;
+  line-height: 1.55;
   font-weight: 400;
   letter-spacing: 0;
 }
 
 .brand-core {
   flex: 1;
+  min-height: 300rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 72rpx;
+  padding: 40rpx 0;
 }
 
 .brand-mark {
   color: #15120d;
-  font-size: 88rpx;
+  font-size: 80rpx;
   line-height: 1.1;
   font-weight: 900;
   letter-spacing: 0;
@@ -50,8 +50,8 @@
 }
 
 .brand-slogan {
-  margin-top: 22rpx;
-  color: rgba(42, 38, 32, 0.42);
+  margin-top: 18rpx;
+  color: rgba(42, 38, 32, 0.44);
   font-size: 24rpx;
   line-height: 1.4;
   font-weight: 600;
@@ -61,11 +61,12 @@
 
 .login-action {
   width: 100%;
+  flex: none;
 }
 
 .wechat-login-btn {
   width: 100%;
-  min-height: 104rpx;
+  min-height: 96rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,10 +74,10 @@
   border-radius: 999rpx;
   background: #07c160;
   color: #ffffff;
-  font-size: 32rpx;
+  font-size: 31rpx;
   font-weight: 700;
   line-height: 1.35;
-  box-shadow: 0 20rpx 42rpx rgba(7, 193, 96, 0.26);
+  box-shadow: 0 18rpx 36rpx rgba(7, 193, 96, 0.24);
 }
 
 .wechat-login-btn::after,
@@ -92,7 +93,7 @@
 .bind-shell {
   align-items: center;
   justify-content: center;
-  gap: 48rpx;
+  gap: 40rpx;
 }
 
 .bind-copy {
@@ -101,14 +102,14 @@
 
 .bind-title {
   color: #15120d;
-  font-size: 52rpx;
+  font-size: 48rpx;
   line-height: 1.2;
   font-weight: 800;
 }
 
 .bind-subtitle {
-  margin-top: 18rpx;
-  color: rgba(84, 79, 72, 0.62);
+  margin-top: 16rpx;
+  color: rgba(84, 79, 72, 0.64);
   font-size: 26rpx;
   line-height: 1.6;
 }
@@ -118,28 +119,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40rpx;
+  gap: 24rpx;
 }
 
 .role-card {
   width: 100%;
   max-width: 560rpx;
-  min-height: 176rpx;
-  padding: 28rpx 18rpx;
-  border-radius: 28rpx;
-  background: rgba(255, 255, 255, 0.82);
+  min-height: 150rpx;
+  padding: 24rpx 22rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.86);
   border: 2rpx solid rgba(30, 24, 16, 0.08);
-  box-shadow: 0 16rpx 42rpx rgba(40, 35, 28, 0.07);
+  box-shadow: 0 14rpx 34rpx rgba(40, 35, 28, 0.07);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12rpx;
+  gap: 10rpx;
   box-sizing: border-box;
 }
 
 .role-card-active {
   border-color: rgba(7, 193, 96, 0.8);
-  background: rgba(240, 255, 247, 0.92);
+  background: rgba(240, 255, 247, 0.94);
 }
 
 .role-title {
@@ -150,7 +151,7 @@
 }
 
 .role-desc {
-  color: rgba(84, 79, 72, 0.56);
+  color: rgba(84, 79, 72, 0.58);
   font-size: 23rpx;
   line-height: 1.4;
 }
@@ -158,19 +159,30 @@
 @media screen and (max-width: 360px) {
   .login-shell,
   .bind-shell {
-    padding-left: 36rpx;
-    padding-right: 36rpx;
+    padding: 36rpx 36rpx calc(28rpx + env(safe-area-inset-bottom));
+  }
+
+  .brand-core {
+    min-height: 240rpx;
+    padding: 28rpx 0;
   }
 
   .brand-mark {
-    font-size: 76rpx;
+    font-size: 68rpx;
   }
 
   .ad-line {
-    font-size: 26rpx;
+    font-size: 24rpx;
+    line-height: 1.45;
+  }
+
+  .wechat-login-btn {
+    min-height: 88rpx;
+    font-size: 29rpx;
   }
 
   .role-card {
     max-width: 100%;
+    min-height: 132rpx;
   }
 }

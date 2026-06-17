@@ -18,12 +18,12 @@
         <input class="chip-input" type="number" value="{{budgetMin}}" data-key="budgetMin" bindinput="onInput" placeholder="800+" />
       </view>
       <view class="filter-chip">
-        <text class="chip-label">{{mode === 'influencer' ? '粉丝' : '粉丝'}}</text>
-        <input class="chip-input" type="number" value="{{fansMin}}" data-key="fansMin" bindinput="onInput" placeholder="1w+" />
+        <text class="chip-label">粉丝</text>
+        <input class="chip-input" type="number" value="{{fansMin}}" data-key="fansMin" bindinput="onInput" placeholder="10000" />
       </view>
       <view wx:if="{{mode === 'influencer'}}" class="filter-chip">
         <text class="chip-label">报价</text>
-        <input class="chip-input" value="{{priceRange}}" data-key="priceRange" bindinput="onInput" placeholder="800" />
+        <input class="chip-input" value="{{priceRange}}" data-key="priceRange" bindinput="onInput" placeholder="800-1500" />
       </view>
       <view wx:if="{{mode === 'product'}}" class="filter-chip filter-chip-wide">
         <text class="chip-label">合作</text>

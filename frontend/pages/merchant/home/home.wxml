@@ -76,20 +76,20 @@
 
   <view class="bottom-tabbar">
     <button class="{{activeTab === 'library' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="library" bindtap="switchTab">
-      <text class="tab-icon">◉</text>
+      <text class="tab-icon">◆</text>
       <text>达人库</text>
     </button>
     <button class="{{activeTab === 'mine' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="mine" bindtap="switchTab">
-      <text class="tab-icon">●</text>
+      <text class="tab-icon">◆</text>
       <text>我的</text>
     </button>
   </view>
 
   <view wx:if="{{showUnlockPrompt}}" class="unlock-mask" catchtap="hidePayPrompt">
     <view class="unlock-modal" catchtap="noop">
-      <view class="unlock-icon">¥</view>
+      <view class="unlock-icon">锁</view>
       <view class="unlock-title">解锁达人联系方式</view>
-      <view class="unlock-desc">该达人信息需付费后查看完整联系方式</view>
+      <view class="unlock-desc">该达人信息需付费后查看完整联系方式。</view>
       <view wx:if="{{selectedInfluencer}}" class="unlock-target">{{selectedInfluencer.nickname}} · {{selectedInfluencer.category}}</view>
       <view class="unlock-actions">
         <button class="unlock-cancel" bindtap="hidePayPrompt">取消</button>

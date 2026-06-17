@@ -3,6 +3,8 @@ const auth = require('../../../utils/auth')
 const storage = require('../../../utils/storage')
 
 const LOCKED_TEXT = '付费解锁后可见'
+const EMPTY_TEXT = '待完善'
+const NEW_INFLUENCER_TEXT = '新达人'
 
 Page({
   data: {
@@ -64,6 +66,9 @@ Page({
   togglePublic(event) {
     const influencerId = getApp().globalData.influencerId
     this.setData({ 'form.isPublic': event.detail.value })
+
+    if (!influencerId) return
+
     api.request(`/influencers/${influencerId}/public`, {
       method: 'PATCH',
       data: { isPublic: event.detail.value }
@@ -103,6 +108,9 @@ Page({
       getApp().globalData.influencerId = profile.id
       this.setData({ form: normalizeProfile(profile) })
       wx.showToast({ title: '已保存' })
+      setTimeout(() => wx.redirectTo({ url: '/pages/influencer/home/home' }), 450)
+    } catch (err) {
+      wx.showToast({ title: err.message || '保存失败', icon: 'none' })
     } finally {
       this.setData({ saving: false })
     }
@@ -114,17 +122,17 @@ function normalizeProfile(profile = {}) {
   return {
     id: profile.id || 0,
     userId: profile.userId || 0,
-    nickname: profile.nickname === '新达人' ? '' : profile.nickname || '',
-    platform: profile.platform === '待完善' ? '' : profile.platform || '',
+    nickname: placeholderValue(profile.nickname, NEW_INFLUENCER_TEXT),
+    platform: placeholderValue(profile.platform, EMPTY_TEXT),
     avatarUrl: profile.avatarUrl || '',
     city: profile.city || '',
-    fansRange: profile.fansRange === '待完善' ? '' : profile.fansRange || '',
+    fansRange: placeholderValue(profile.fansRange, EMPTY_TEXT),
     fansCount: profile.fansCount || '',
-    category: profile.category === '待完善' ? '' : profile.category || '',
-    categories: profile.categories || profile.category || '',
+    category: placeholderValue(profile.category, EMPTY_TEXT),
+    categories: profile.categories || placeholderValue(profile.category, EMPTY_TEXT),
     styleTags: profile.styleTags || '',
     contentForms: profile.contentForms || '',
-    priceRange: profile.priceRange === '待完善' ? '' : profile.priceRange || '',
+    priceRange: placeholderValue(profile.priceRange, EMPTY_TEXT),
     priceImageText: profile.priceImageText || '',
     priceVideo: profile.priceVideo || '',
     priceDetail: visibleValue(profile.priceDetail),
@@ -140,6 +148,10 @@ function normalizeProfile(profile = {}) {
     portfolioUrl3: portfolio[2] && (portfolio[2].contentUrl || portfolio[2].coverUrl) || '',
     isPublic: Boolean(profile.isPublic)
   }
+}
+
+function placeholderValue(value, placeholder) {
+  return value && value !== placeholder ? value : ''
 }
 
 function visibleValue(value) {

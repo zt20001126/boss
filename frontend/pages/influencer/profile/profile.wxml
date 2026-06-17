@@ -1,92 +1,114 @@
 <navigation-bar title="达人资料" back="{{true}}" color="black" background="#FFF"></navigation-bar>
-<view class="page">
-  <view class="card row">
+<view class="profile-page">
+  <view class="profile-head">
+    <view class="title">达人资料</view>
+    <view class="subtitle">完善平台、领域、报价与联系方式后，商家可以更准确地找到你。</view>
+  </view>
+
+  <view class="visibility-card">
     <view>
       <view class="card-title">公开资料</view>
-      <view class="muted">关闭后商家列表和推荐结果中不可见</view>
+      <view class="muted">关闭后，商家列表和推荐结果中不会展示你的资料。</view>
     </view>
     <switch checked="{{form.isPublic}}" bindchange="togglePublic" />
   </view>
 
-  <form bindsubmit="submit">
-    <view class="field">
-      <text class="label">达人昵称</text>
-      <input class="input" name="nickname" value="{{form.nickname}}" />
-    </view>
-    <view class="field">
-      <text class="label">头像地址</text>
-      <input class="input" name="avatarUrl" value="{{form.avatarUrl}}" placeholder="头像图片 URL" />
-    </view>
-    <view class="field">
-      <text class="label">所在城市</text>
-      <input class="input" name="city" value="{{form.city}}" placeholder="例如 上海" />
-    </view>
-    <view class="field">
-      <text class="label">平台</text>
-      <input class="input" name="platform" value="{{form.platform}}" />
-    </view>
-    <view class="field">
-      <text class="label">粉丝区间</text>
-      <input class="input" name="fansRange" value="{{form.fansRange}}" />
-    </view>
-    <view class="field">
-      <text class="label">精确粉丝数</text>
-      <input class="input" type="number" name="fansCount" value="{{form.fansCount}}" />
-    </view>
-    <view class="field">
-      <text class="label">擅长领域</text>
-      <input class="input" name="category" value="{{form.category}}" />
-    </view>
-    <view class="field">
-      <text class="label">内容领域（多选）</text>
-      <input class="input" name="categories" value="{{form.categories}}" placeholder="美妆,本地生活,数码" />
-    </view>
-    <view class="field">
-      <text class="label">内容风格标签</text>
-      <input class="input" name="styleTags" value="{{form.styleTags}}" placeholder="测评,探店,种草" />
-    </view>
-    <view class="field">
-      <text class="label">内容形式</text>
-      <input class="input" name="contentForms" value="{{form.contentForms}}" placeholder="图文,短视频,直播" />
-    </view>
-    <view class="field">
-      <text class="label">报价区间</text>
-      <input class="input" name="priceRange" value="{{form.priceRange}}" />
-    </view>
-    <view class="grid">
+  <form bindsubmit="submit" class="profile-form">
+    <view class="form-section">
+      <view class="section-title">基础信息</view>
       <view class="field">
-        <text class="label">图文报价</text>
-        <input class="input" type="number" name="priceImageText" value="{{form.priceImageText}}" />
+        <text class="label">达人昵称</text>
+        <input class="input" name="nickname" value="{{form.nickname}}" placeholder="例如 小鹿探店" />
       </view>
       <view class="field">
-        <text class="label">视频报价</text>
-        <input class="input" type="number" name="priceVideo" value="{{form.priceVideo}}" />
+        <text class="label">头像地址</text>
+        <input class="input" name="avatarUrl" value="{{form.avatarUrl}}" placeholder="头像图片 URL" />
       </view>
-    </view>
-    <view class="field">
-      <text class="label">精确报价细节</text>
-      <textarea class="textarea" name="priceDetail" value="{{form.priceDetail}}" placeholder="付费解锁后展示，例如档期、套餐、附加费用" />
-    </view>
-    <view class="field">
-      <text class="label">联系方式</text>
-      <input class="input" name="contact" value="{{form.contact}}" />
-    </view>
-    <view class="field">
-      <text class="label">微信号</text>
-      <input class="input" name="contactWechat" value="{{form.contactWechat}}" />
-    </view>
-    <view class="field">
-      <text class="label">手机号</text>
-      <input class="input" name="contactPhone" value="{{form.contactPhone}}" />
-    </view>
-    <view class="field">
-      <text class="label">社交账号</text>
-      <input class="input" name="socialAccount" value="{{form.socialAccount}}" />
+      <view class="grid">
+        <view class="field">
+          <text class="label">所在城市</text>
+          <input class="input" name="city" value="{{form.city}}" placeholder="例如 上海" />
+        </view>
+        <view class="field">
+          <text class="label">平台</text>
+          <input class="input" name="platform" value="{{form.platform}}" placeholder="小红书/抖音" />
+        </view>
+      </view>
     </view>
 
-    <view class="portfolio-card">
+    <view class="form-section">
+      <view class="section-title">内容能力</view>
+      <view class="grid">
+        <view class="field">
+          <text class="label">粉丝区间</text>
+          <input class="input" name="fansRange" value="{{form.fansRange}}" placeholder="1万-5万" />
+        </view>
+        <view class="field">
+          <text class="label">精确粉丝数</text>
+          <input class="input" type="number" name="fansCount" value="{{form.fansCount}}" placeholder="10000" />
+        </view>
+      </view>
+      <view class="field">
+        <text class="label">擅长领域</text>
+        <input class="input" name="category" value="{{form.category}}" placeholder="美妆/数码/本地生活" />
+      </view>
+      <view class="field">
+        <text class="label">内容领域（多选）</text>
+        <input class="input" name="categories" value="{{form.categories}}" placeholder="美妆, 本地生活, 数码" />
+      </view>
+      <view class="field">
+        <text class="label">内容风格标签</text>
+        <input class="input" name="styleTags" value="{{form.styleTags}}" placeholder="测评, 探店, 种草" />
+      </view>
+      <view class="field">
+        <text class="label">内容形式</text>
+        <input class="input" name="contentForms" value="{{form.contentForms}}" placeholder="图文, 短视频, 直播" />
+      </view>
+    </view>
+
+    <view class="form-section">
+      <view class="section-title">报价与联系方式</view>
+      <view class="field">
+        <text class="label">报价区间</text>
+        <input class="input" name="priceRange" value="{{form.priceRange}}" placeholder="800-1500" />
+      </view>
+      <view class="grid">
+        <view class="field">
+          <text class="label">图文报价</text>
+          <input class="input" type="number" name="priceImageText" value="{{form.priceImageText}}" placeholder="800" />
+        </view>
+        <view class="field">
+          <text class="label">视频报价</text>
+          <input class="input" type="number" name="priceVideo" value="{{form.priceVideo}}" placeholder="1500" />
+        </view>
+      </view>
+      <view class="field">
+        <text class="label">精确报价细节</text>
+        <textarea class="textarea" name="priceDetail" value="{{form.priceDetail}}" placeholder="例如档期、套餐、附加费用等，付费解锁后展示" />
+      </view>
+      <view class="field">
+        <text class="label">联系方式</text>
+        <input class="input" name="contact" value="{{form.contact}}" placeholder="微信/手机/邮箱" />
+      </view>
+      <view class="grid">
+        <view class="field">
+          <text class="label">微信号</text>
+          <input class="input" name="contactWechat" value="{{form.contactWechat}}" placeholder="WeChat ID" />
+        </view>
+        <view class="field">
+          <text class="label">手机号</text>
+          <input class="input" name="contactPhone" value="{{form.contactPhone}}" placeholder="手机号" />
+        </view>
+      </view>
+      <view class="field">
+        <text class="label">社交账号</text>
+        <input class="input" name="socialAccount" value="{{form.socialAccount}}" placeholder="主页链接或账号 ID" />
+      </view>
+    </view>
+
+    <view class="form-section">
       <view class="section-title">代表作品</view>
-      <view class="section-hint">建议填写 3 条，可用于列表与详情展示</view>
+      <view class="section-hint">建议填写 3 条，可用于列表与详情展示。</view>
       <view class="portfolio-item">
         <input class="input" name="portfolioTitle1" value="{{form.portfolioTitle1}}" placeholder="作品 1 标题" />
         <input class="input" name="portfolioUrl1" value="{{form.portfolioUrl1}}" placeholder="作品 1 链接或封面 URL" />
@@ -101,7 +123,7 @@
       </view>
     </view>
 
-    <button class="primary-btn" form-type="submit" loading="{{saving}}" disabled="{{saving}}">
+    <button class="primary-btn save-btn" form-type="submit" loading="{{saving}}" disabled="{{saving}}">
       {{saving ? '保存中' : '保存资料'}}
     </button>
   </form>
