@@ -94,6 +94,16 @@ CREATE TABLE IF NOT EXISTS product (
     INDEX idx_product_platform (platform)
 );
 
+CREATE TABLE IF NOT EXISTS product_favorite (
+    id BIGINT PRIMARY KEY,
+    influencer_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_product_favorite (influencer_id, product_id),
+    INDEX idx_favorite_influencer_time (influencer_id, created_at),
+    INDEX idx_favorite_product (product_id)
+);
+
 CREATE TABLE IF NOT EXISTS unlock_record (
     id BIGINT PRIMARY KEY,
     merchant_id BIGINT NOT NULL,

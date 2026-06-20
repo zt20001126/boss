@@ -139,6 +139,20 @@ public interface MarketplaceStore {
     List<Product> listProducts();
 
     /**
+     * 保存达人产品收藏；调用方负责保证同一达人和产品只保存一次。
+     */
+    void saveProductFavorite(ProductFavorite favorite);
+
+    /** 查询达人对指定产品的收藏记录。 */
+    Optional<ProductFavorite> findProductFavorite(long influencerId, long productId);
+
+    /** 按达人列出收藏关系，具体排序由业务服务统一处理。 */
+    List<ProductFavorite> listProductFavorites(long influencerId);
+
+    /** 删除达人对指定产品的收藏，记录不存在时不报错。 */
+    void deleteProductFavorite(long influencerId, long productId);
+
+    /**
      * Saves a paid unlock record.
      *
      * @param record unlock record to save

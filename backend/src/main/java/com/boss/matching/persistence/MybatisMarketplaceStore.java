@@ -26,6 +26,7 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
     private final InfluencerMapper influencerMapper;
     private final InfluencerPortfolioMapper influencerPortfolioMapper;
     private final ProductMapper productMapper;
+    private final ProductFavoriteMapper productFavoriteMapper;
     private final UnlockRecordMapper unlockRecordMapper;
 
     /**
@@ -37,12 +38,13 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
      * @param productMapper input value
      * @param unlockRecordMapper input value
      */
-    public MybatisMarketplaceStore(UserMapper userMapper, MerchantMapper merchantMapper, InfluencerMapper influencerMapper, InfluencerPortfolioMapper influencerPortfolioMapper, ProductMapper productMapper, UnlockRecordMapper unlockRecordMapper) {
+    public MybatisMarketplaceStore(UserMapper userMapper, MerchantMapper merchantMapper, InfluencerMapper influencerMapper, InfluencerPortfolioMapper influencerPortfolioMapper, ProductMapper productMapper, ProductFavoriteMapper productFavoriteMapper, UnlockRecordMapper unlockRecordMapper) {
         this.userMapper = userMapper;
         this.merchantMapper = merchantMapper;
         this.influencerMapper = influencerMapper;
         this.influencerPortfolioMapper = influencerPortfolioMapper;
         this.productMapper = productMapper;
+        this.productFavoriteMapper = productFavoriteMapper;
         this.unlockRecordMapper = unlockRecordMapper;
     }
 
@@ -170,6 +172,39 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
         return productMapper.selectList(null).stream().map(this::toDomain).toList();
     }
 
+    /** 数据库唯一索引兜底，写入前仍先检查以保证收藏接口幂等。 */
+    @Override
+    public void saveProductFavorite(ProductFavorite favorite) {
+        if (findProductFavorite(favorite.influencerId(), favorite.productId()).isEmpty()) {
+            productFavoriteMapper.insert(toEntity(favorite));
+        }
+    }
+
+    @Override
+    public Optional<ProductFavorite> findProductFavorite(long influencerId, long productId) {
+        LambdaQueryWrapper<ProductFavoriteEntity> query = new LambdaQueryWrapper<ProductFavoriteEntity>()
+                .eq(ProductFavoriteEntity::getInfluencerId, influencerId)
+                .eq(ProductFavoriteEntity::getProductId, productId);
+        return Optional.ofNullable(productFavoriteMapper.selectOne(query)).map(this::toDomain);
+    }
+
+    @Override
+    public List<ProductFavorite> listProductFavorites(long influencerId) {
+        return productFavoriteMapper.selectList(new LambdaQueryWrapper<ProductFavoriteEntity>()
+                        .eq(ProductFavoriteEntity::getInfluencerId, influencerId)
+                        .orderByDesc(ProductFavoriteEntity::getCreatedAt))
+                .stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
+    @Override
+    public void deleteProductFavorite(long influencerId, long productId) {
+        productFavoriteMapper.delete(new LambdaQueryWrapper<ProductFavoriteEntity>()
+                .eq(ProductFavoriteEntity::getInfluencerId, influencerId)
+                .eq(ProductFavoriteEntity::getProductId, productId));
+    }
+
     /** {@inheritDoc} */
     @Override
     public void saveUnlock(UnlockRecord record) {
@@ -272,6 +307,19 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
 
     private Product toDomain(ProductEntity entity) {
         return new Product(entity.getId(), entity.getMerchantId(), entity.getName(), entity.getType(), entity.getTargetCategories(), entity.getDescription(), entity.getGoal(), value(entity.getBudgetMin()), value(entity.getBudgetMax()), value(entity.getMaxQuotePerInfluencer()), entity.getPlatform(), entity.getContentForms(), value(entity.getFansMin()), value(entity.getFansMax()), entity.getCooperationType(), entity.getStatus(), toInstant(entity.getCreatedAt()));
+    }
+
+    private ProductFavoriteEntity toEntity(ProductFavorite favorite) {
+        ProductFavoriteEntity entity = new ProductFavoriteEntity();
+        entity.setId(favorite.id());
+        entity.setInfluencerId(favorite.influencerId());
+        entity.setProductId(favorite.productId());
+        entity.setCreatedAt(toLocal(favorite.createdAt()));
+        return entity;
+    }
+
+    private ProductFavorite toDomain(ProductFavoriteEntity entity) {
+        return new ProductFavorite(entity.getId(), entity.getInfluencerId(), entity.getProductId(), toInstant(entity.getCreatedAt()));
     }
 
     private InfluencerPortfolioEntity toEntity(InfluencerPortfolio portfolio) {

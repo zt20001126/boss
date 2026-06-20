@@ -44,6 +44,9 @@ public class JwtRoleFilter extends OncePerRequestFilter {
             return;
         }
 
+        // 后续控制器只读取已验签的用户信息，避免前端伪造达人 ID 操作他人收藏。
+        request.setAttribute("authUserId", claims.get().userId());
+        request.setAttribute("authRole", claims.get().role());
         filterChain.doFilter(request, response);
     }
 
@@ -51,6 +54,8 @@ public class JwtRoleFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         if (!path.startsWith("/api/")) return false;
         if (path.equals("/api/health") || path.startsWith("/api/auth/")) return false;
+        // 收藏查询同样包含账号私有数据，因此 GET 请求也必须登录。
+        if (path.startsWith("/api/influencer/favorites")) return true;
         if (HttpMethod.GET.matches(request.getMethod())) return false;
         return true;
     }
@@ -59,7 +64,7 @@ public class JwtRoleFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        if (path.startsWith("/api/influencers/profile") || path.matches("/api/influencers/\\d+/public")) {
+        if (path.startsWith("/api/influencers/profile") || path.matches("/api/influencers/\\d+/public") || path.startsWith("/api/influencer/favorites")) {
             return "INFLUENCER".equals(role);
         }
 

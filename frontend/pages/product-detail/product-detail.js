@@ -6,7 +6,9 @@ Page({
     id: 0,
     mode: 'influencer',
     product: null,
-    matches: []
+    matches: [],
+    isFavorite: false,
+    favoriteSaving: false
   },
 
   onLoad(query) {
@@ -19,7 +21,8 @@ Page({
 
   onShow() {
     const expectedRole = this.data.mode === 'merchant' ? 'MERCHANT' : 'INFLUENCER'
-    auth.requireLogin(expectedRole)
+    if (!auth.requireLogin(expectedRole)) return
+    if (this.data.mode === 'influencer' && this.data.id) this.loadFavoriteStatus()
   },
 
   async loadDetail() {
@@ -30,5 +33,37 @@ Page({
       next.matches = matchRes.items
     }
     this.setData(next)
+  },
+
+  // 收藏状态属于达人账号私有数据，仅在达人模式下加载。
+  async loadFavoriteStatus() {
+    try {
+      const res = await api.request(`/influencer/favorites/${this.data.id}`, { showLoading: false })
+      this.setData({ isFavorite: Boolean(res.favorited) })
+    } catch (err) {
+      this.setData({ isFavorite: false })
+    }
+  },
+
+  // 先更新按钮反馈；接口失败时恢复原状态，避免页面与服务端不一致。
+  async toggleFavorite() {
+    if (this.data.favoriteSaving) return
+
+    const previousValue = this.data.isFavorite
+    const nextValue = !previousValue
+    this.setData({ isFavorite: nextValue, favoriteSaving: true })
+
+    try {
+      const res = await api.request(`/influencer/favorites/${this.data.id}`, {
+        method: nextValue ? 'POST' : 'DELETE',
+        showLoading: false
+      })
+      this.setData({ isFavorite: Boolean(res.favorited) })
+      wx.showToast({ title: nextValue ? '收藏成功' : '已取消收藏' })
+    } catch (err) {
+      this.setData({ isFavorite: previousValue })
+    } finally {
+      this.setData({ favoriteSaving: false })
+    }
   }
 })

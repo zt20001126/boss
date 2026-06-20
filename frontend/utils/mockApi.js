@@ -97,6 +97,8 @@ const state = {
       unlocked: false
     }
   ],
+  // Mock 收藏关系与真实表结构保持一致，按达人账号隔离。
+  productFavorites: [],
   unlocks: {}
 }
 
@@ -169,6 +171,27 @@ function mockRequest(path, options) {
         resolve({ items: state.products.filter(item => item.merchantId === merchantId) })
         return
       }
+      if (route.pathname === '/influencer/favorites' && method === 'GET') {
+        resolve({ items: listFavoriteProducts() })
+        return
+      }
+      if (route.pathname.startsWith('/influencer/favorites/')) {
+        const productId = Number(route.pathname.split('/')[3])
+        if (method === 'GET') {
+          resolve({ favorited: isProductFavorite(productId) })
+          return
+        }
+        if (method === 'POST') {
+          saveProductFavorite(productId)
+          resolve({ favorited: true })
+          return
+        }
+        if (method === 'DELETE') {
+          deleteProductFavorite(productId)
+          resolve({ favorited: false })
+          return
+        }
+      }
       if (route.pathname === '/influencers') {
         resolve({ items: filterInfluencers(route.query) })
         return
@@ -227,6 +250,48 @@ function filterProducts(query) {
     .filter(item => query.cooperationType ? item.cooperationType.includes(query.cooperationType) : true)
 }
 
+// Mock 环境从当前登录用户推导达人，避免前端传入达人 ID。
+function currentInfluencer() {
+  return state.influencers.find(item => item.userId === state.currentWxUserId) || state.influencers[0]
+}
+
+function isProductFavorite(productId) {
+  const influencer = currentInfluencer()
+  return Boolean(influencer && state.productFavorites.some(item => (
+    item.influencerId === influencer.id && item.productId === productId
+  )))
+}
+
+// 收藏写入保持幂等，同一达人不会生成重复记录。
+function saveProductFavorite(productId) {
+  const influencer = currentInfluencer()
+  if (!influencer || isProductFavorite(productId)) return
+  state.productFavorites.push({
+    influencerId: influencer.id,
+    productId,
+    createdAt: Date.now()
+  })
+}
+
+function deleteProductFavorite(productId) {
+  const influencer = currentInfluencer()
+  if (!influencer) return
+  state.productFavorites = state.productFavorites.filter(item => (
+    item.influencerId !== influencer.id || item.productId !== productId
+  ))
+}
+
+// 下架产品仍返回到收藏列表，由页面负责展示“已下架”状态。
+function listFavoriteProducts() {
+  const influencer = currentInfluencer()
+  if (!influencer) return []
+  return state.productFavorites
+    .filter(item => item.influencerId === influencer.id)
+    .sort((left, right) => right.createdAt - left.createdAt)
+    .map(item => state.products.find(product => product.id === item.productId))
+    .filter(Boolean)
+}
+
 function filterInfluencers(query) {
   return state.influencers
     .filter(item => item.isPublic)
@@ -239,6 +304,7 @@ function filterInfluencers(query) {
 
 function mockLogin(data) {
   const isMerchant = data.role === 'MERCHANT'
+  if (!isMerchant) state.currentWxUserId = state.influencers[0].userId
   return {
     token: `mock-token-${Date.now()}`,
     user: { id: Date.now(), role: data.role },
@@ -298,6 +364,7 @@ function bindRole(data) {
 }
 
 function createSession(user) {
+  state.currentWxUserId = user.id
   if (user.role === 'UNBOUND') {
     return {
       token: `mock-token-${user.id}`,

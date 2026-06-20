@@ -1,5 +1,5 @@
 <navigation-bar title="产品详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
-<view class="page" wx:if="{{product}}">
+<view class="{{mode === 'influencer' ? 'page detail-page-with-actions' : 'page'}}" wx:if="{{product}}">
   <view class="section">
     <view class="title">{{product.name}}</view>
     <view class="subtitle">{{product.description}}</view>
@@ -44,3 +44,12 @@
   </view>
 </view>
 <view wx:else class="page empty">加载中</view>
+
+<view wx:if="{{product && mode === 'influencer'}}" class="detail-actions">
+  <button
+    class="{{isFavorite ? 'favorite-btn favorite-btn-active' : 'favorite-btn'}}"
+    disabled="{{favoriteSaving}}"
+    bindtap="toggleFavorite"
+  >{{isFavorite ? '已收藏' : '收藏'}}</button>
+  <button class="contact-btn">立即联系</button>
+</view>

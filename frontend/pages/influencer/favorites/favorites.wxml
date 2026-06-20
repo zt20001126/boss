@@ -1,0 +1,13 @@
+<navigation-bar title="收藏产品" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="favorites-page">
+  <block wx:if="{{favorites.length}}">
+    <product-card
+      wx:for="{{favorites}}"
+      wx:key="id"
+      item="{{item}}"
+      show-status="{{true}}"
+      bind:detail="goDetail"
+    />
+  </block>
+  <empty-state wx:elif="{{loaded}}" text="暂无收藏产品" />
+</view>

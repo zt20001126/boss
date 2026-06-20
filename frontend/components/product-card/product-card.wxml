@@ -5,7 +5,8 @@
       <view class="card-title">{{item.name}}</view>
       <view class="meta">{{item.platform}} · {{item.cooperationType}}</view>
     </view>
-    <text class="tag">{{item.targetCategories || item.type}}</text>
+    <text wx:if="{{showStatus && item.status !== 'ACTIVE'}}" class="tag offline-tag">已下架</text>
+    <text wx:else class="tag">{{item.targetCategories || item.type}}</text>
   </view>
   <view class="subtitle">{{item.description}}</view>
   <view class="info-grid">

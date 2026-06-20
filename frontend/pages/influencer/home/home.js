@@ -52,6 +52,11 @@ Page({
     wx.navigateTo({ url: '/pages/influencer/profile/profile' })
   },
 
+  // 从“我的”进入独立收藏页，收藏列表由目标页面按账号加载。
+  goFavorites() {
+    wx.navigateTo({ url: '/pages/influencer/favorites/favorites' })
+  },
+
   goDetail(event) {
     const id = event.detail ? event.detail.id : event.currentTarget.dataset.id
     wx.navigateTo({ url: `/pages/product-detail/product-detail?id=${id}&mode=influencer` })

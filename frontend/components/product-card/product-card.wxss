@@ -77,6 +77,11 @@
   line-height: 1.35;
 }
 
+.offline-tag {
+  background: #fff1f0;
+  color: #b42318;
+}
+
 .actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

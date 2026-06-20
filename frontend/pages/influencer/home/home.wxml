@@ -16,6 +16,13 @@
         </view>
         <text class="mine-arrow">›</text>
       </view>
+      <view class="mine-card" hover-class="card-pressed" bindtap="goFavorites">
+        <view>
+          <view class="mine-title">收藏产品</view>
+          <view class="mine-desc">查看你收藏的商家合作产品</view>
+        </view>
+        <text class="mine-arrow">›</text>
+      </view>
       <view class="mine-card" hover-class="card-pressed">
         <view>
           <view class="mine-title">可申请合作记录</view>

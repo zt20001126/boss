@@ -3,6 +3,8 @@ package com.boss.matching.service;
 import com.boss.matching.config.AppProperties;
 import com.boss.matching.config.MarketplaceSeedDataInitializer;
 import com.boss.matching.domain.UserRole;
+import com.boss.matching.domain.Product;
+import com.boss.matching.domain.ProductFavorite;
 import com.boss.matching.infra.cache.MemoryCacheService;
 import com.boss.matching.payment.MockPaymentService;
 import com.boss.matching.persistence.MemoryMarketplaceStore;
@@ -10,6 +12,7 @@ import com.boss.matching.persistence.MarketplaceStore;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +24,7 @@ class MarketplaceServiceTest {
     private final UnlockService unlockService = new UnlockService(store, new MockPaymentService(properties));
     private final InfluencerService influencerService = new InfluencerService(store, cacheService, profileViewService);
     private final ProductService productService = new ProductService(store, profileViewService);
+    private final ProductFavoriteService favoriteService = new ProductFavoriteService(store);
 
     MarketplaceServiceTest() {
         new MarketplaceSeedDataInitializer(store).seed();
@@ -61,6 +65,43 @@ class MarketplaceServiceTest {
 
         assertThat(matches).hasSize(2);
         assertThat((Double) matches.get(0).get("score")).isGreaterThanOrEqualTo((Double) matches.get(1).get("score"));
+    }
+
+    @Test
+    void productFavoriteAddAndRemoveAreIdempotent() {
+        assertThat(favoriteService.isFavorite(2, 1)).isFalse();
+
+        favoriteService.favorite(2, 1);
+        favoriteService.favorite(2, 1);
+
+        assertThat(favoriteService.isFavorite(2, 1)).isTrue();
+        assertThat(store.listProductFavorites(1)).hasSize(1);
+
+        favoriteService.unfavorite(2, 1);
+        favoriteService.unfavorite(2, 1);
+        assertThat(favoriteService.isFavorite(2, 1)).isFalse();
+    }
+
+    @Test
+    void productFavoritesAreIsolatedByInfluencerAccount() {
+        favoriteService.favorite(2, 1);
+
+        assertThat(favoriteService.listFavorites(2)).extracting(Product::id).containsExactly(1L);
+        assertThat(favoriteService.listFavorites(3)).isEmpty();
+    }
+
+    @Test
+    void productFavoritesKeepOfflineProductsAndSortNewestFirst() {
+        Instant now = Instant.now();
+        store.saveProductFavorite(new ProductFavorite(2001, 1, 1, now.minusSeconds(10)));
+        store.saveProductFavorite(new ProductFavorite(2002, 1, 2, now));
+
+        Product active = store.findProduct(1).orElseThrow();
+        store.saveProduct(new Product(active.id(), active.merchantId(), active.name(), active.type(), active.targetCategories(), active.description(), active.goal(), active.budgetMin(), active.budgetMax(), active.maxQuotePerInfluencer(), active.platform(), active.contentForms(), active.fansMin(), active.fansMax(), active.cooperationType(), "OFFLINE", active.createdAt()));
+
+        var favorites = favoriteService.listFavorites(2);
+        assertThat(favorites).extracting(Product::id).containsExactly(2L, 1L);
+        assertThat(favorites.get(1).status()).isEqualTo("OFFLINE");
     }
 
     @Test

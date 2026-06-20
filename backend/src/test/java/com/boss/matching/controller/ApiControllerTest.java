@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,6 +76,27 @@ class ApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"merchantId\":1,\"name\":\"未登录产品\",\"type\":\"美妆\",\"description\":\"测试产品\",\"goal\":\"曝光\",\"budgetMin\":1000,\"budgetMax\":3000,\"platform\":\"小红书\",\"fansMin\":10000,\"fansMax\":100000,\"cooperationType\":\"种草\"}"))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void influencerFavoriteApisUseAuthenticatedAccount() throws Exception {
+        String influencerToken = register("13900001002", "INFLUENCER");
+
+        mockMvc.perform(post("/api/influencer/favorites/1")
+                        .header("Authorization", bearer(influencerToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.favorited", equalTo(true)));
+
+        mockMvc.perform(get("/api/influencer/favorites")
+                        .header("Authorization", bearer(influencerToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()", equalTo(1)))
+                .andExpect(jsonPath("$.items[0].id", equalTo(1)));
+
+        mockMvc.perform(delete("/api/influencer/favorites/1")
+                        .header("Authorization", bearer(influencerToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.favorited", equalTo(false)));
     }
 
     private String register(String phone, String role) throws Exception {

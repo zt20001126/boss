@@ -9,6 +9,7 @@
     "pages/merchant/influencer-list/influencer-list",
     "pages/influencer/home/home",
     "pages/influencer/profile/profile",
+    "pages/influencer/favorites/favorites",
     "pages/product-detail/product-detail"
   ],
   "window": {

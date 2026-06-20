@@ -21,6 +21,7 @@ public class MemoryMarketplaceStore implements MarketplaceStore {
     private final ConcurrentHashMap<Long, Influencer> influencers = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, List<InfluencerPortfolio>> portfolios = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Product> products = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ProductFavorite> productFavorites = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, UnlockRecord> unlocks = new ConcurrentHashMap<>();
 
     /** {@inheritDoc} */
@@ -125,6 +126,29 @@ public class MemoryMarketplaceStore implements MarketplaceStore {
         return List.copyOf(products.values());
     }
 
+    /** 内存模式使用组合键保证达人和产品的收藏关系唯一。 */
+    @Override
+    public void saveProductFavorite(ProductFavorite favorite) {
+        productFavorites.putIfAbsent(favoriteKey(favorite.influencerId(), favorite.productId()), favorite);
+    }
+
+    @Override
+    public Optional<ProductFavorite> findProductFavorite(long influencerId, long productId) {
+        return Optional.ofNullable(productFavorites.get(favoriteKey(influencerId, productId)));
+    }
+
+    @Override
+    public List<ProductFavorite> listProductFavorites(long influencerId) {
+        return productFavorites.values().stream()
+                .filter(item -> item.influencerId() == influencerId)
+                .toList();
+    }
+
+    @Override
+    public void deleteProductFavorite(long influencerId, long productId) {
+        productFavorites.remove(favoriteKey(influencerId, productId));
+    }
+
     /** {@inheritDoc} */
     @Override
     public void saveUnlock(UnlockRecord record) {
@@ -139,5 +163,9 @@ public class MemoryMarketplaceStore implements MarketplaceStore {
 
     private String key(long merchantId, long influencerId, long productId) {
         return merchantId + ":" + influencerId + ":" + productId;
+    }
+
+    private String favoriteKey(long influencerId, long productId) {
+        return influencerId + ":" + productId;
     }
 }
