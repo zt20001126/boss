@@ -7,14 +7,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Local filesystem storage adapter for development deployments.
+ */
 @Component
 public class LocalStorageAdapter implements StorageAdapter {
     private final Path root;
 
+    /**
+     * Creates a LocalStorageAdapter instance.
+     * @param properties input value
+     */
     public LocalStorageAdapter(AppProperties properties) {
         this.root = Path.of(properties.getStorage().getLocalRoot());
     }
 
+    /** {@inheritDoc} */
     @Override
     public String save(String path, byte[] content) {
         try {

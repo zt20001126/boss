@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Creates and verifies JWT tokens used by the mini-program API.
+ */
 @Service
 public class AuthTokenService {
     private static final Pattern USER_ID_PATTERN = Pattern.compile("\"userId\":(\\d+)");
@@ -22,10 +25,19 @@ public class AuthTokenService {
 
     private final AppProperties properties;
 
+    /**
+     * Creates a AuthTokenService instance.
+     * @param properties input value
+     */
     public AuthTokenService(AppProperties properties) {
         this.properties = properties;
     }
 
+    /**
+     * Creates data for create token.
+     * @param user input value
+     * @return result value
+     */
     public String createToken(User user) {
         long expiresAt = Instant.now().plusSeconds(properties.getAuth().getTokenTtlSeconds()).getEpochSecond();
         String header = encode("{\"alg\":\"HS256\",\"typ\":\"JWT\"}");
@@ -34,6 +46,11 @@ public class AuthTokenService {
         return header + "." + payload + "." + signature;
     }
 
+    /**
+     * Verifies data for verify.
+     * @param token input value
+     * @return result value
+     */
     public Optional<TokenClaims> verify(String token) {
         if (token == null || token.isBlank()) {
             return Optional.empty();
@@ -77,6 +94,9 @@ public class AuthTokenService {
         return matcher.find() ? matcher.group(1) : "";
     }
 
+    /**
+     * Verified token claims extracted from a JWT.
+     */
     public record TokenClaims(long userId, String role) {
     }
 }

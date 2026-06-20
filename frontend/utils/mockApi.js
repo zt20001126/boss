@@ -315,7 +315,7 @@ function createSession(user) {
     user,
     profile: isMerchant
       ? merchant
-      : maskInfluencer(ensureInfluencer(user))
+      : ownInfluencerProfile(ensureInfluencer(user))
   }
 }
 
@@ -353,7 +353,8 @@ function ensureInfluencer(user) {
     socialAccount: '',
     rawSocialAccount: '',
     isPublic: false,
-    unlocked: false
+    unlocked: false,
+    portfolio: []
   }
   state.influencers.push(influencer)
   return influencer
@@ -431,10 +432,11 @@ function saveInfluencer(data) {
     userId: Number(data.userId || (current && current.userId) || 0),
     fansCount: Number(data.fansCount || (current && current.fansCount) || 0),
     rawContact: data.contact,
-    rawSocialAccount: data.socialAccount
+    rawSocialAccount: data.socialAccount,
+    portfolio: Array.isArray(data.portfolio) ? data.portfolio : []
   })
   if (!current) state.influencers.push(next)
-  return maskInfluencer(next)
+  return ownInfluencerProfile(next)
 }
 
 function unlock(data) {
@@ -496,6 +498,16 @@ function maskInfluencer(item) {
     contact: item.unlocked ? item.rawContact : '付费解锁后可见',
     socialAccount: item.unlocked ? item.rawSocialAccount : '付费解锁后可见',
     fansCount: item.unlocked ? item.fansCount : null
+  }
+}
+
+function ownInfluencerProfile(item) {
+  return {
+    ...item,
+    contact: item.rawContact || item.contact || '',
+    socialAccount: item.rawSocialAccount || item.socialAccount || '',
+    fansCount: Number(item.fansCount || 0),
+    portfolio: Array.isArray(item.portfolio) ? item.portfolio : []
   }
 }
 

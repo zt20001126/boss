@@ -13,31 +13,16 @@ Page({
       id: 0,
       userId: 0,
       nickname: '',
-      avatarUrl: '',
       city: '',
       platform: '',
-      fansRange: '',
       fansCount: '',
       category: '',
-      categories: '',
-      styleTags: '',
-      contentForms: '',
       priceRange: '',
-      priceImageText: '',
-      priceVideo: '',
-      priceDetail: '',
-      contactWechat: '',
-      contactPhone: '',
       contact: '',
-      socialAccount: '',
-      portfolioTitle1: '',
-      portfolioUrl1: '',
-      portfolioTitle2: '',
-      portfolioUrl2: '',
-      portfolioTitle3: '',
-      portfolioUrl3: '',
       isPublic: false
-    }
+    },
+    // 首填阶段默认保留一条代表作品，用户可按需继续添加。
+    portfolioList: [createEmptyPortfolio()]
   },
 
   onShow() {
@@ -51,27 +36,51 @@ Page({
     const fallback = session.profile || {}
 
     if (!userId) {
-      this.setData({ form: normalizeProfile(fallback) })
+      this.applyProfile(fallback)
       return
     }
 
     try {
       const res = await api.request(`/influencers/profile?userId=${userId}`, { showLoading: false })
-      this.setData({ form: normalizeProfile(res.item || fallback) })
+      this.applyProfile(res.item || fallback)
     } catch (err) {
-      this.setData({ form: normalizeProfile(fallback) })
+      this.applyProfile(fallback)
     }
   },
 
-  togglePublic(event) {
-    const influencerId = getApp().globalData.influencerId
-    this.setData({ 'form.isPublic': event.detail.value })
+  applyProfile(profile) {
+    const normalized = normalizeProfile(profile)
+    this.setData({
+      form: normalized.form,
+      portfolioList: normalized.portfolioList
+    })
+  },
 
-    if (!influencerId) return
+  onPortfolioInput(event) {
+    const index = Number(event.currentTarget.dataset.index)
+    const field = event.currentTarget.dataset.field
+    const nextList = this.data.portfolioList.map((item, itemIndex) => (
+      itemIndex === index ? { ...item, [field]: event.detail.value } : item
+    ))
 
-    api.request(`/influencers/${influencerId}/public`, {
-      method: 'PATCH',
-      data: { isPublic: event.detail.value }
+    this.setData({ portfolioList: nextList })
+  },
+
+  addPortfolio() {
+    this.setData({
+      portfolioList: this.data.portfolioList.concat(createEmptyPortfolio())
+    })
+  },
+
+  removePortfolio(event) {
+    if (this.data.portfolioList.length <= 1) {
+      wx.showToast({ title: '至少保留一条代表作品', icon: 'none' })
+      return
+    }
+
+    const index = Number(event.currentTarget.dataset.index)
+    this.setData({
+      portfolioList: this.data.portfolioList.filter((item, itemIndex) => itemIndex !== index)
     })
   },
 
@@ -85,10 +94,17 @@ Page({
       return
     }
 
+    const portfolioError = validatePortfolio(this.data.portfolioList)
+    if (portfolioError) {
+      wx.showToast({ title: portfolioError, icon: 'none' })
+      return
+    }
+
     const session = storage.getSession()
     this.setData({ saving: true })
 
     try {
+      const fansCount = Number(values.fansCount)
       const res = await api.request('/influencers/profile', {
         method: 'POST',
         data: {
@@ -96,17 +112,26 @@ Page({
           ...values,
           id: getApp().globalData.influencerId,
           userId: session.user && session.user.id,
-          fansCount: Number(values.fansCount),
-          priceImageText: Number(values.priceImageText || 0),
-          priceVideo: Number(values.priceVideo || 0),
-          portfolio: buildPortfolio(values),
+          fansCount,
+          fansRange: buildFansRange(fansCount),
+          categories: values.category,
+          styleTags: '',
+          contentForms: '',
+          priceImageText: 0,
+          priceVideo: 0,
+          priceDetail: '',
+          contactWechat: values.contact,
+          contactPhone: '',
+          socialAccount: '',
+          // 代表作品内容暂复用后端 contentUrl 字段，后续可独立扩展正文/链接字段。
+          portfolio: buildPortfolio(this.data.portfolioList, values.platform),
           isPublic: this.data.form.isPublic
         }
       })
       const profile = res.item
       storage.setSession({ ...session, profile })
       getApp().globalData.influencerId = profile.id
-      this.setData({ form: normalizeProfile(profile) })
+      this.applyProfile(profile)
       wx.showToast({ title: '已保存' })
       setTimeout(() => wx.redirectTo({ url: '/pages/influencer/home/home' }), 450)
     } catch (err) {
@@ -120,33 +145,33 @@ Page({
 function normalizeProfile(profile = {}) {
   const portfolio = Array.isArray(profile.portfolio) ? profile.portfolio : []
   return {
-    id: profile.id || 0,
-    userId: profile.userId || 0,
-    nickname: placeholderValue(profile.nickname, NEW_INFLUENCER_TEXT),
-    platform: placeholderValue(profile.platform, EMPTY_TEXT),
-    avatarUrl: profile.avatarUrl || '',
-    city: profile.city || '',
-    fansRange: placeholderValue(profile.fansRange, EMPTY_TEXT),
-    fansCount: profile.fansCount || '',
-    category: placeholderValue(profile.category, EMPTY_TEXT),
-    categories: profile.categories || placeholderValue(profile.category, EMPTY_TEXT),
-    styleTags: profile.styleTags || '',
-    contentForms: profile.contentForms || '',
-    priceRange: placeholderValue(profile.priceRange, EMPTY_TEXT),
-    priceImageText: profile.priceImageText || '',
-    priceVideo: profile.priceVideo || '',
-    priceDetail: visibleValue(profile.priceDetail),
-    contactWechat: visibleValue(profile.contactWechat),
-    contactPhone: visibleValue(profile.contactPhone),
-    contact: visibleValue(profile.contact),
-    socialAccount: visibleValue(profile.socialAccount),
-    portfolioTitle1: portfolio[0] && portfolio[0].title || '',
-    portfolioUrl1: portfolio[0] && (portfolio[0].contentUrl || portfolio[0].coverUrl) || '',
-    portfolioTitle2: portfolio[1] && portfolio[1].title || '',
-    portfolioUrl2: portfolio[1] && (portfolio[1].contentUrl || portfolio[1].coverUrl) || '',
-    portfolioTitle3: portfolio[2] && portfolio[2].title || '',
-    portfolioUrl3: portfolio[2] && (portfolio[2].contentUrl || portfolio[2].coverUrl) || '',
-    isPublic: Boolean(profile.isPublic)
+    form: {
+      id: profile.id || 0,
+      userId: profile.userId || 0,
+      nickname: placeholderValue(profile.nickname, NEW_INFLUENCER_TEXT),
+      city: profile.city || '',
+      platform: placeholderValue(profile.platform, EMPTY_TEXT),
+      fansCount: visibleFansCount(profile.fansCount),
+      category: placeholderValue(profile.category, EMPTY_TEXT),
+      priceRange: placeholderValue(profile.priceRange, EMPTY_TEXT),
+      contact: visibleValue(profile.contact),
+      isPublic: Boolean(profile.isPublic)
+    },
+    portfolioList: portfolio.length
+      ? portfolio.map(item => ({
+        id: item.id || 0,
+        title: item.title || '',
+        content: item.contentUrl || item.coverUrl || ''
+      }))
+      : [createEmptyPortfolio()]
+  }
+}
+
+function createEmptyPortfolio() {
+  return {
+    id: 0,
+    title: '',
+    content: ''
   }
 }
 
@@ -158,33 +183,44 @@ function visibleValue(value) {
   return value && value !== LOCKED_TEXT ? value : ''
 }
 
-function buildPortfolio(values) {
-  return [1, 2, 3]
-    .map((index) => {
-      const title = String(values[`portfolioTitle${index}`] || '').trim()
-      const contentUrl = String(values[`portfolioUrl${index}`] || '').trim()
+function visibleFansCount(value) {
+  return value === null || value === undefined ? '' : value
+}
+
+function buildFansRange(fansCount) {
+  if (fansCount < 10000) return '1万以下'
+  if (fansCount < 50000) return '1万-5万'
+  if (fansCount < 100000) return '5万-10万'
+  if (fansCount < 500000) return '10万-50万'
+  return '50万以上'
+}
+
+function buildPortfolio(portfolioList, platform) {
+  return portfolioList
+    .map((item, index) => {
+      const title = String(item.title || '').trim()
+      const content = String(item.content || '').trim()
       return {
+        id: item.id || null,
         title,
-        contentUrl,
-        coverUrl: contentUrl,
-        platform: values.platform || '',
-        sortOrder: index
+        contentUrl: content,
+        coverUrl: '',
+        platform: platform || '',
+        sortOrder: index + 1
       }
     })
-    .filter((item) => item.title || item.contentUrl)
+    .filter(item => item.title || item.contentUrl)
 }
 
 function validateProfile(values) {
   const requiredFields = [
     ['nickname', '请填写达人昵称'],
-    ['platform', '请填写平台'],
     ['city', '请填写所在城市'],
-    ['fansRange', '请填写粉丝区间'],
-    ['category', '请填写擅长领域'],
-    ['contentForms', '请填写内容形式'],
-    ['priceRange', '请填写报价区间'],
-    ['contact', '请填写联系方式'],
-    ['socialAccount', '请填写社交账号']
+    ['platform', '请填写主要平台'],
+    ['fansCount', '请填写粉丝数'],
+    ['category', '请填写内容领域'],
+    ['priceRange', '请填写报价'],
+    ['contact', '请填写联系方式']
   ]
 
   for (const [field, message] of requiredFields) {
@@ -193,8 +229,17 @@ function validateProfile(values) {
 
   const fansCount = Number(values.fansCount)
   if (!Number.isFinite(fansCount) || fansCount < 0) {
-    return '精确粉丝数不能小于 0'
+    return '粉丝数不能小于 0'
   }
 
+  return ''
+}
+
+function validatePortfolio(portfolioList) {
+  const hasCompleteItem = portfolioList.some(item => (
+    String(item.title || '').trim() && String(item.content || '').trim()
+  ))
+
+  if (!hasCompleteItem) return '请至少填写一条完整的代表作品'
   return ''
 }

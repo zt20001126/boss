@@ -76,11 +76,11 @@
 
   <view class="bottom-tabbar">
     <button class="{{activeTab === 'library' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="library" bindtap="switchTab">
-      <text class="tab-icon">◆</text>
+      <text class="tab-icon">●</text>
       <text>达人库</text>
     </button>
     <button class="{{activeTab === 'mine' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="mine" bindtap="switchTab">
-      <text class="tab-icon">◆</text>
+      <text class="tab-icon">●</text>
       <text>我的</text>
     </button>
   </view>

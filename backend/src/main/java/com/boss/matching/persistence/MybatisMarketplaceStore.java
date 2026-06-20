@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * MyBatis backed MarketplaceStore implementation that delegates database access to mapper interfaces.
+ */
 @Repository
 @ConditionalOnProperty(prefix = "app.data", name = "provider", havingValue = "mysql")
 public class MybatisMarketplaceStore implements MarketplaceStore {
@@ -25,6 +28,15 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
     private final ProductMapper productMapper;
     private final UnlockRecordMapper unlockRecordMapper;
 
+    /**
+     * Creates a MybatisMarketplaceStore instance.
+     * @param userMapper input value
+     * @param merchantMapper input value
+     * @param influencerMapper input value
+     * @param influencerPortfolioMapper input value
+     * @param productMapper input value
+     * @param unlockRecordMapper input value
+     */
     public MybatisMarketplaceStore(UserMapper userMapper, MerchantMapper merchantMapper, InfluencerMapper influencerMapper, InfluencerPortfolioMapper influencerPortfolioMapper, ProductMapper productMapper, UnlockRecordMapper unlockRecordMapper) {
         this.userMapper = userMapper;
         this.merchantMapper = merchantMapper;
@@ -34,11 +46,13 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
         this.unlockRecordMapper = unlockRecordMapper;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long nextId() {
         return ids.incrementAndGet();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void saveUser(User user) {
         if (userMapper.selectById(user.id()) == null) {
@@ -48,21 +62,25 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<User> findUser(long id) {
         return Optional.ofNullable(userMapper.selectById(id)).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<User> findUserByPhone(String phone) {
         return Optional.ofNullable(userMapper.selectOne(new LambdaQueryWrapper<UserEntity>().eq(UserEntity::getPhone, phone))).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<User> findUserByOpenid(String openid) {
         return Optional.ofNullable(userMapper.selectOne(new LambdaQueryWrapper<UserEntity>().eq(UserEntity::getOpenid, openid))).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void saveMerchant(Merchant merchant) {
         if (merchantMapper.selectById(merchant.id()) == null) {
@@ -72,16 +90,19 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Merchant> findMerchant(long id) {
         return Optional.ofNullable(merchantMapper.selectById(id)).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Merchant> findMerchantByUserId(long userId) {
         return Optional.ofNullable(merchantMapper.selectOne(new LambdaQueryWrapper<MerchantEntity>().eq(MerchantEntity::getUserId, userId))).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void saveInfluencer(Influencer influencer) {
         if (influencerMapper.selectById(influencer.id()) == null) {
@@ -91,27 +112,32 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Influencer> findInfluencer(long id) {
         return Optional.ofNullable(influencerMapper.selectById(id)).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Influencer> findInfluencerByUserId(long userId) {
         return Optional.ofNullable(influencerMapper.selectOne(new LambdaQueryWrapper<InfluencerEntity>().eq(InfluencerEntity::getUserId, userId))).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Influencer> listInfluencers() {
         return influencerMapper.selectList(null).stream().map(this::toDomain).toList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void saveInfluencerPortfolios(long influencerId, List<InfluencerPortfolio> portfolios) {
         influencerPortfolioMapper.delete(new LambdaQueryWrapper<InfluencerPortfolioEntity>().eq(InfluencerPortfolioEntity::getInfluencerId, influencerId));
         portfolios.forEach(item -> influencerPortfolioMapper.insert(toEntity(item)));
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<InfluencerPortfolio> listInfluencerPortfolios(long influencerId) {
         return influencerPortfolioMapper.selectList(new LambdaQueryWrapper<InfluencerPortfolioEntity>()
@@ -122,6 +148,7 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
                 .toList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void saveProduct(Product product) {
         if (productMapper.selectById(product.id()) == null) {
@@ -131,21 +158,25 @@ public class MybatisMarketplaceStore implements MarketplaceStore {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Product> findProduct(long id) {
         return Optional.ofNullable(productMapper.selectById(id)).map(this::toDomain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Product> listProducts() {
         return productMapper.selectList(null).stream().map(this::toDomain).toList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void saveUnlock(UnlockRecord record) {
         unlockRecordMapper.insert(toEntity(record));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<UnlockRecord> findUnlock(long merchantId, long influencerId, long productId) {
         LambdaQueryWrapper<UnlockRecordEntity> query = new LambdaQueryWrapper<UnlockRecordEntity>()

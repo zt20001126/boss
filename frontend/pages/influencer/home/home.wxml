@@ -2,20 +2,6 @@
 <view class="workspace-page">
   <scroll-view class="workspace-scroll" scroll-y enhanced show-scrollbar="{{false}}">
     <view wx:if="{{activeTab === 'library'}}" class="tab-panel">
-      <view class="filter-bar-sticky">
-        <filter-bar
-          mode="product"
-          action-text="筛选"
-          type="{{type}}"
-          platform="{{platform}}"
-          budget-min="{{budgetMin}}"
-          fans-min="{{fansMin}}"
-          cooperation-type="{{cooperationType}}"
-          bind:change="onFilterChange"
-          bind:submit="loadProducts"
-        />
-      </view>
-
       <block wx:if="{{products.length}}">
         <product-card wx:for="{{products}}" wx:key="id" item="{{item}}" bind:detail="goDetail" />
       </block>
@@ -42,11 +28,11 @@
 
   <view class="bottom-tabbar">
     <button class="{{activeTab === 'library' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="library" bindtap="switchTab">
-      <text class="tab-icon">◆</text>
+      <text class="tab-icon">●</text>
       <text>商家列表</text>
     </button>
     <button class="{{activeTab === 'mine' ? 'tab-item tab-item-active' : 'tab-item'}}" hover-class="tab-pressed" data-tab="mine" bindtap="switchTab">
-      <text class="tab-icon">◆</text>
+      <text class="tab-icon">●</text>
       <text>我的</text>
     </button>
   </view>

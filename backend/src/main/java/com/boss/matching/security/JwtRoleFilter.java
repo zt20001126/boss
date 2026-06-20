@@ -11,10 +11,17 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Authenticates API requests by reading JWT claims and installing Spring Security authorities.
+ */
 @Component
 public class JwtRoleFilter extends OncePerRequestFilter {
     private final AuthTokenService tokenService;
 
+    /**
+     * Creates a JwtRoleFilter instance.
+     * @param tokenService input value
+     */
     public JwtRoleFilter(AuthTokenService tokenService) {
         this.tokenService = tokenService;
     }

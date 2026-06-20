@@ -2,14 +2,12 @@ const api = require('../../../utils/request')
 const auth = require('../../../utils/auth')
 const storage = require('../../../utils/storage')
 
+const INCOMPLETE_TEXT = '待完善'
+const LOCKED_TEXT = '付费解锁后可见'
+
 Page({
   data: {
     activeTab: 'library',
-    type: '',
-    platform: '',
-    budgetMin: '',
-    fansMin: '',
-    cooperationType: '',
     isPublic: false,
     profileComplete: false,
     products: []
@@ -19,10 +17,6 @@ Page({
     if (!auth.requireLogin('INFLUENCER')) return
     this.loadProfile()
     this.loadProducts()
-  },
-
-  onFilterChange(event) {
-    this.setData({ [event.detail.key]: event.detail.value })
   },
 
   switchTab(event) {
@@ -50,9 +44,7 @@ Page({
   },
 
   async loadProducts() {
-    const query = buildProductQuery(this.data)
-    const path = query ? `/products?${query}` : '/products'
-    const res = await api.request(path)
+    const res = await api.request('/products')
     this.setData({ products: res.items })
   },
 
@@ -66,26 +58,19 @@ Page({
   }
 })
 
-function buildProductQuery(filters) {
-  const params = []
-  if (filters.type) params.push(`type=${encodeURIComponent(filters.type)}`)
-  if (filters.platform) params.push(`platform=${encodeURIComponent(filters.platform)}`)
-  if (filters.budgetMin) params.push(`budgetMin=${Number(filters.budgetMin)}`)
-  if (filters.fansMin) params.push(`fansMin=${Number(filters.fansMin)}`)
-  if (filters.cooperationType) params.push(`cooperationType=${encodeURIComponent(filters.cooperationType)}`)
-  return params.join('&')
-}
-
 function isInfluencerProfileComplete(profile = {}) {
+  // 达人工作台只按首填阶段的核心字段判断资料是否完成。
   return Boolean(
     profile.nickname &&
+    profile.city &&
     profile.platform &&
-    profile.platform !== '待完善' &&
-    profile.fansRange &&
+    profile.platform !== INCOMPLETE_TEXT &&
+    Number(profile.fansCount) > 0 &&
     profile.category &&
-    profile.category !== '待完善' &&
+    profile.category !== INCOMPLETE_TEXT &&
     profile.priceRange &&
+    profile.priceRange !== INCOMPLETE_TEXT &&
     profile.contact &&
-    profile.socialAccount
+    profile.contact !== LOCKED_TEXT
   )
 }

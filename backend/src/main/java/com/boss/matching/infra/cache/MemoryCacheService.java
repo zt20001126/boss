@@ -6,10 +6,14 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * In-memory cache implementation used for local development and tests.
+ */
 @Component
 public class MemoryCacheService implements CacheService {
     private final ConcurrentMap<String, Object> values = new ConcurrentHashMap<>();
 
+    /** {@inheritDoc} */
     @Override
     public <T> Optional<T> get(String key, Class<T> type) {
         Object value = values.get(key);
@@ -19,11 +23,13 @@ public class MemoryCacheService implements CacheService {
         return Optional.empty();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void put(String key, Object value) {
         values.put(key, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void evict(String key) {
         values.remove(key);

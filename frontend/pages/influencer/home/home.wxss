@@ -13,24 +13,8 @@
 
 .tab-panel {
   min-height: 100%;
-  padding: 0 32rpx 36rpx;
+  padding: 28rpx 32rpx 36rpx;
   box-sizing: border-box;
-}
-
-.filter-bar-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  padding: 24rpx 0 18rpx;
-  background: rgba(244, 246, 251, 0.96);
-}
-
-.filter-bar-sticky .filter-bar {
-  margin-bottom: 0;
-}
-
-.mine-panel {
-  padding-top: 28rpx;
 }
 
 .mine-card {
@@ -86,7 +70,7 @@
 .tab-item {
   flex: 1;
   min-height: 72rpx;
-  border-radius: 999rpx;
+  border-radius: 14rpx;
   background: #f2f4f9;
   color: #667085;
   font-size: 27rpx;

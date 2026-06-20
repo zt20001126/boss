@@ -3,6 +3,9 @@ const auth = require('../../utils/auth')
 const ENV = require('../../config/env')
 const storage = require('../../utils/storage')
 
+const INCOMPLETE_TEXT = '待完善'
+const LOCKED_TEXT = '付费解锁后可见'
+
 Page({
   data: {
     role: 'MERCHANT',
@@ -150,9 +153,10 @@ Page({
     const app = getApp()
     app.globalData.role = role
     app.globalData.token = res.token
-    if (role === 'MERCHANT') app.globalData.merchantId = res.profile.id
-    if (role === 'INFLUENCER') app.globalData.influencerId = res.profile.id
+    if (role === 'MERCHANT' && res.profile) app.globalData.merchantId = res.profile.id
+    if (role === 'INFLUENCER' && res.profile) app.globalData.influencerId = res.profile.id
     storage.setSession({ role, token: res.token, user: res.user, profile: res.profile })
+
     if (role === 'MERCHANT' && !isMerchantProfileComplete(res.profile)) {
       wx.redirectTo({ url: '/pages/merchant/profile/profile' })
       return
@@ -180,19 +184,22 @@ function validateLogin(values) {
 }
 
 function isMerchantProfileComplete(profile = {}) {
-  return Boolean(profile.name && profile.industry && profile.industry !== '待完善' && profile.description && profile.contact)
+  return Boolean(profile.name && profile.industry && profile.industry !== INCOMPLETE_TEXT && profile.description && profile.contact)
 }
 
 function isInfluencerProfileComplete(profile = {}) {
+  // 首次注册只要求达人端最小资料集，避免扩展字段阻塞进入工作台。
   return Boolean(
     profile.nickname &&
+    profile.city &&
     profile.platform &&
-    profile.platform !== '待完善' &&
-    profile.fansRange &&
+    profile.platform !== INCOMPLETE_TEXT &&
+    Number(profile.fansCount) > 0 &&
     profile.category &&
-    profile.category !== '待完善' &&
+    profile.category !== INCOMPLETE_TEXT &&
     profile.priceRange &&
+    profile.priceRange !== INCOMPLETE_TEXT &&
     profile.contact &&
-    profile.socialAccount
+    profile.contact !== LOCKED_TEXT
   )
 }

@@ -8,6 +8,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
+/**
+ * Resolves WeChat login codes into stable openid and unionid identifiers.
+ */
 @Service
 public class WechatAuthService {
     private static final String CODE2SESSION_URL = "https://api.weixin.qq.com/sns/jscode2session";
@@ -15,10 +18,19 @@ public class WechatAuthService {
     private final AppProperties properties;
     private final RestTemplate restTemplate = new RestTemplate();
 
+    /**
+     * Creates a WechatAuthService instance.
+     * @param properties input value
+     */
     public WechatAuthService(AppProperties properties) {
         this.properties = properties;
     }
 
+    /**
+     * Exchanges a WeChat login code for session identity data.
+     * @param code input value
+     * @return result value
+     */
     public WechatSession code2Session(String code) {
         if (!StringUtils.hasText(code)) {
             throw new IllegalArgumentException("微信登录 code 不能为空");
@@ -45,6 +57,9 @@ public class WechatAuthService {
         return new WechatSession((String) response.get("openid"), (String) response.get("unionid"));
     }
 
+    /**
+     * WeChat identity returned after code-to-session resolution.
+     */
     public record WechatSession(String openid, String unionid) {
     }
 }
