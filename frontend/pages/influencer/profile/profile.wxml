@@ -5,6 +5,21 @@
     <view class="subtitle">先填写商家筛选和联系所需的核心信息，更多资料可以后续补充。</view>
   </view>
 
+  <view class="visibility-card">
+    <view class="visibility-copy">
+      <view class="visibility-title">向商家展示我的资料</view>
+      <view class="visibility-desc" wx:if="{{form.isPublic}}">商家可在达人库中看到你的公开资料，联系方式仍需解锁。</view>
+      <view class="visibility-desc" wx:else>关闭后，你不会出现在商家的达人库和匹配结果中。</view>
+    </view>
+    <switch
+      class="visibility-switch"
+      checked="{{form.isPublic}}"
+      disabled="{{visibilitySaving}}"
+      color="#5b6ff5"
+      bindchange="onVisibilityChange"
+    />
+  </view>
+
   <form bindsubmit="submit" class="profile-form">
     <view class="form-section">
       <view class="section-title">基础信息</view>

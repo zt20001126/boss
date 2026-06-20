@@ -9,6 +9,7 @@ const NEW_INFLUENCER_TEXT = '新达人'
 Page({
   data: {
     saving: false,
+    visibilitySaving: false,
     form: {
       id: 0,
       userId: 0,
@@ -54,6 +55,49 @@ Page({
       form: normalized.form,
       portfolioList: normalized.portfolioList
     })
+  },
+
+  async onVisibilityChange(event) {
+    if (this.data.visibilitySaving) return
+
+    const previousValue = Boolean(this.data.form.isPublic)
+    const nextValue = Boolean(event.detail.value)
+    if (previousValue === nextValue) return
+
+    const influencerId = Number(this.data.form.id || getApp().globalData.influencerId)
+    if (!influencerId) {
+      this.setData({ 'form.isPublic': previousValue })
+      wx.showToast({ title: '请先保存达人资料', icon: 'none' })
+      return
+    }
+
+    this.setData({
+      visibilitySaving: true,
+      'form.isPublic': nextValue
+    })
+
+    try {
+      await api.request(`/influencers/${influencerId}/public`, {
+        method: 'PATCH',
+        data: { isPublic: nextValue },
+        showLoading: false
+      })
+
+      const session = storage.getSession()
+      storage.setSession({
+        ...session,
+        profile: {
+          ...(session.profile || {}),
+          id: influencerId,
+          isPublic: nextValue
+        }
+      })
+      wx.showToast({ title: nextValue ? '资料已公开' : '资料已隐藏' })
+    } catch (err) {
+      this.setData({ 'form.isPublic': previousValue })
+    } finally {
+      this.setData({ visibilitySaving: false })
+    }
   },
 
   onPortfolioInput(event) {

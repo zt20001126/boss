@@ -34,6 +34,25 @@
   min-width: 0;
 }
 
+.visibility-title {
+  color: #111827;
+  font-size: 29rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.visibility-desc {
+  margin-top: 10rpx;
+  color: #667085;
+  font-size: 24rpx;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.visibility-switch {
+  flex: none;
+}
+
 .profile-form {
   display: block;
   padding: 0;
@@ -179,13 +198,12 @@
 }
 
 .save-btn {
-  position: sticky;
-  bottom: 0;
-  z-index: 4;
-  margin-top: 8rpx;
-  margin-bottom: 0;
-  border-radius: 14rpx 14rpx 0 0;
-  padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
+  position: static;
+  width: 100%;
+  min-height: 88rpx;
+  margin: 8rpx 0 calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 14rpx;
+  box-sizing: border-box;
 }
 
 @media screen and (max-width: 360px) {
